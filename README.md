@@ -1,4 +1,5 @@
 # Die Hard
+[![](https://github.com/DmGorokhov/python-log-backender-challenge/workflows/CI/badge.svg)](https://github.com/DmGorokhov/python-log-backender-challenge/actions)
 
 This is a project with a test task for backend developers.
 
