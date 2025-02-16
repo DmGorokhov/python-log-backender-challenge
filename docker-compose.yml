@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  app:
+  app: &app
     build: .
     restart: always
     depends_on:
@@ -14,6 +14,30 @@ services:
       - app_static_files:/srv/app/static:rw
       - app_media_files:/srv/app/media:rw
       - .:/srv/app
+
+  celery-worker:
+    <<: *app
+    command: celery -A src --app=src.core.celery_app:app worker -E -Q high,normal,low,celery --concurrency=4 --loglevel=debug
+    depends_on:
+      - app
+      - redis
+    ports:
+      [ ]
+
+  celery-beat:
+    <<: *app
+    command: celery -A src --app=src.core.celery_app:app beat --loglevel=debug --schedule /src
+    depends_on:
+      - celery-worker
+    ports:
+      [ ]
+
+  flower:
+    <<: *app
+    command: celery -A src  --app=src.core.celery_app:app flower
+    ports: [ "5555:5555" ]
+    depends_on:
+      - celery-worker
 
   db:
     tty: true
@@ -46,6 +70,6 @@ services:
 
 
 volumes:
-  dev-db-data: {}
+  dev-db-data: { }
   app_media_files: { }
   app_static_files: { }

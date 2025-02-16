@@ -48,6 +48,9 @@ jobs:
       - name: Test with pytest
         run: |
           make test
+      - name: Lint check with ruff
+        run: |
+          make lint
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         if: ${{ always() }}
