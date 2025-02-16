@@ -102,10 +102,8 @@ class EventLogService:
     def _is_next_event_partition_available(self) -> bool:
         partition_quantity = self._get_log_event_partition_quantity()
         unpublished_events_quantity = self._get_unpublished_events_quantity()
-        if unpublished_events_quantity >= partition_quantity:
-            return True
-        else:
-            return False
+        return  unpublished_events_quantity >= partition_quantity
+
 
     def _is_service_ttl_expired(self) -> bool:
         if self.service_expiration_time is None:
